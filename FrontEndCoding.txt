@@ -1,0 +1,87 @@
+1.Toggle Code
+
+1.In Particular ts file
+updatePartner(partner: any) {
+    console.log(partner);
+    if (partner.partnerStatus == 0)
+      partner.partnerStatus = 1;
+    else
+      partner.partnerStatus = 0;
+    this.partnersService.updatePartner(partner.partnerID, partner).
+      subscribe({
+        next: (response) => {
+          console.log(response);
+         // this.success();
+          this.router.navigate(['/partner'])
+        }
+      });
+  }
+  success(): void {
+    this.toastr.success('Partner Updated Successfully!', 'Success');
+
+  }
+
+
+Give this in html file
+
+<input [ngModel]="part.partnerStatus" (change)="updatePartner(part)"
+
+2.Sorting code
+Give below code in ts file
+ sort(property) {
+    this.isDesc = !this.isDesc; //change the direction    
+    this.column = property;
+    let direction = this.isDesc ? 1 : -1;
+
+    this.partners.sort(function (a, b) {
+      if (a[property] < b[property]) {
+        return -1 * direction;
+      }
+      else if (a[property] > b[property]) {
+        return 1 * direction;
+      }
+      else {
+        return 0;
+      }
+    });
+  };
+
+Give this in html page for all fields
+ <thead>
+ <tr>
+ <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" (click)="sort('partnerID')" colspan="1" aria-sort="ascending" aria-label="Employee ID: activate to sort column descending" style="width: 280px; text-align:center">Partner ID</th>
+ <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" (click)="sort('partnerName')" aria-label="Employee Name: activate to sort column ascending" style="width: 124px;">Partner Name</th>
+ <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" (click)="sort('location')" aria-label="Joined Date: activate to sort column ascending" style="width: 120px;">Location</th>
+ <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" (click)="sort('country')" aria-label="Joined Date: activate to sort column ascending" style="width: 120px;">Country</th>
+ <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" (click)="sort('registeredDate')" aria-label="Joined Date: activate to sort column ascending" style="width: 150px;">Registered Date</th>
+<th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 130px;">Action</th>
+ </tr>
+ </thead>
+
+
+3.Search
+1.installnpm i ng2-search-filter --save
+ in html page
+<label>Search:<input type="text" class="form-control form-control-sm" [(ngModel)]="searchText" placeholder="" aria-controls="example"></label>
+ 
+
+ in ts file
+
+  searchText: any;
+
+4.Pagination Code
+in html page
+<tr *ngFor="let part of partners | filter:searchText |paginate:{itemsPerPage:noOfRows,currentPage:page,totalItems:totalLength}  ">
+
+ <div class="row">
+ <div class="col-sm-12 col-md-5"><div class="dataTables_info" id="example_info" role="status" aria-live="polite" *ngIf="noOfRows<=totalCount">Showing 1 to {{noOfRows}} of {{totalCount}} entries</div>
+ <div class="dataTables_info" id="example_info" role="status" aria-live="polite" *ngIf="totalCount < noOfRows">Showing 1 to {{totalCount}} of {{totalCount}} entries</div>
+ </div>
+ <div class="col-sm-12 col-md-7">
+ <div class="dataTables_paginate paging_simple_numbers" id="example_paginate">
+ <ul class="pagination">
+ <pagination-controls (pageChange)="page=$event"></pagination-controls>
+ </ul>
+ </div>
+ </div>
+ </div>
